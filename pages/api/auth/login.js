@@ -32,6 +32,8 @@ export default async function handler(req, res) {
 
 	const user = await User.findOne({email}).lean();
 
+	console.log(user);
+
 	if (!user) {
 		return res.status(401).json({success: false, error: "Invalid email and password combination."})
 	}
@@ -60,6 +62,6 @@ export default async function handler(req, res) {
 
 	}
 	else {
-		return res.status(401).json({success: false, error: "Invalid email and password combination."})
+		return res.status(401).json({success: false, error: "Invalid email and password combination!"})
 	}
 }
