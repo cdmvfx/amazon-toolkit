@@ -1,43 +1,30 @@
 import { useState } from "react";
-import AuthForm, { AuthFormAlert } from "../AuthForm";
 import axios, { AxiosError } from "axios";
-import { useRouter } from "next/router";
+import AuthForm, { AuthFormAlert } from "../AuthForm";
 
-const Reset = () => {
-
-	const router = useRouter()
+const Forgot = () => {
 
 	const fields = [
 		{
-			label: 'New Password',
-			name: 'newPassword'
-		},
-		{
-			label: 'Confirm New Password',
-			name: 'confirmNewPassword'
+			label: 'Email Address',
+			name: 'email'
 		}
 	]
 
 	const [values, setValues] = useState({
-		newPassword: '',
-		confirmNewPassword: '',
-		showPassword: false
+		email: ''
 	})
 
 	const [alert, setAlert] = useState<AuthFormAlert>({ type: '', message: '' })
 
 	const handleSubmit = async () => {
 
-		const data = {
-			...values,
-			uid: router.query.uid,
-			token: router.query.token
-		}
+		const email = values.email
 
 		axios
-			.post('/api/auth/reset', data)
+			.post('/api/auth/forgot', { email })
 			.then(res => {
-				console.log('Password changed.', res)
+				console.log('Reset link sent.', res.data)
 				setAlert({
 					type: 'success',
 					message: res.data.message
@@ -48,24 +35,28 @@ const Reset = () => {
 					type: 'error',
 					message: err.response?.data.error
 				})
-				console.log(err.response)
 			})
 	}
 
 	return (
-		<AuthForm
-			id='change'
-			title='Set new password'
+		<AuthForm 
+			id='reset'
+			title='Reset your password'
+			subtitle=''
 			fields={fields}
 			primaryAction={{
-				content: 'Change password',
+				content: 'Send reset link',
 				onAction: handleSubmit
+			}}
+			secondaryAction={{
+				content: 'Back to login',
+				onAction: () => {}
 			}}
 			values={values}
 			setValues={setValues}
 			alert={alert}
 		/>
-	);
+	)
 }
 
-export default Reset
+export default Forgot

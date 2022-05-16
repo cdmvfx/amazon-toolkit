@@ -2,8 +2,14 @@ import { Container, Heading, Text } from '@chakra-ui/react'
 import Head from 'next/head'
 import {verifyToken} from '../src/utilities/basicAuth'
 import Navbar from '../src/components/Navbar'
+import { GetServerSideProps } from 'next'
 
-export default function Home({signedIn, token}) {
+type HomeProps = {
+	signedIn: boolean
+	token: string
+}
+
+export default function Home({signedIn, token}: HomeProps) {
   return (
 		<div>
 			<Head>
@@ -24,7 +30,7 @@ export default function Home({signedIn, token}) {
 }
 
 
-export const getServerSideProps = async (context) => {
+export const getServerSideProps: GetServerSideProps = async (context) => {
 
 	return verifyToken(context)
 

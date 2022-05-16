@@ -5,37 +5,50 @@ import bcrypt from 'bcrypt';
 
 export default async function handler(req, res) {
 
-	const { email } = req.body
+	const { newPassword, confirmNewPassword, uid, token } = req.body
 
 	let error = '';		
 
-	if (!email || typeof email !== 'string') {
-		error += 'Invalid email. ';
+	if (!newPassword || typeof newPassword !== 'string') {
+		error += 'Invalid password. ';
 	}
 
-	const regex = new RegExp(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)
+	if (newPassword.length < 6) {
+		error += 'Please provide a password longer than 6 characters. ';
+	}
 	
-	if (!regex.test(email)) {
-		error += 'Invalid email. ';
+	if (newPassword !== confirmNewPassword) {
+		error += 'Make sure both fields match.';
 	}
 
 	if (error != '') return res.status(401).json({success: false, error: error})
 
 	try {
+		
+		const user = await User.findOne({_id: uid}).lean();
 
-		await dbConnect();
-
-		const user = await User.findOne({ email }).lean()
-
-		if (user) {
-			// to do: send email with reset link
+		if (!user) {
+			throw new Error('User not found.')
 		}
 
-		return res.status(200).json({success: true, message: `Successfully sent reset link to ${email}.`})
+		const key = user.password + '-' + new Date(user.created).getTime()
+
+		const resetData = jwt.verify(token, key)
+
+		if (!resetData.reset) {
+			throw new Error('Not a reset token.')
+		}
+
+		const hashed = await bcrypt.hash(newPassword, 10)
+
+		await User.updateOne({ _id: user._id }, {
+			$set: { password: hashed }
+		})
+
+		return res.status(200).json({success: true, message: 'Successfully changed password.'})
 	}
 	catch (err) {
-		console.log(err)
-		res.status(403).json({success: false, error: "Invalid request."})
+		res.status(403).json({success: false, error: "Invalid request.", err})
 	}
 
 

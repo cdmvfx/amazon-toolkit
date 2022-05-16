@@ -1,7 +1,4 @@
 import jwt from "jsonwebtoken";
-import dbConnect from '../../../lib/dbConnect';
-import User from "../../../src/models/user";
-import bcrypt from 'bcrypt';
 import { NextRequest } from "next/server";
 
 const verifyToken = (req: NextRequest): string | boolean => {
@@ -11,6 +8,8 @@ const verifyToken = (req: NextRequest): string | boolean => {
 	const token = req.cookies.ReviewGet
 
 	let _id;
+
+	if (!JWT_SECRET) return false
 
 	try {
 		const user = jwt.verify(token, JWT_SECRET)

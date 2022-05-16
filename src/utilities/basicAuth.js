@@ -1,12 +1,12 @@
 import jwt from "jsonwebtoken";
 
-function authUser (req, res) {
+export const authUser = (req, res) => {
 	if (req.user == null) {
 		return res.status(403).json({success: false, message: "You are not signed in."})
 	}
 }
 
-function verifyToken (context) {
+export const verifyToken = (context) => {
 
 	const path = context.resolvedUrl
 
@@ -46,9 +46,4 @@ function verifyToken (context) {
 		}
 	}
 	
-}
-
-module.exports = {
-	authUser,
-	verifyToken
 }
