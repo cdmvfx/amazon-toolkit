@@ -1,7 +1,7 @@
 import jwt from "jsonwebtoken";
-import { NextRequest } from "next/server";
+import { NextApiHandler } from "next";
 
-const verifyToken = (req: NextRequest): string | boolean => {
+const verifyToken: NextApiHandler = (req, res) => {
 
 	const JWT_SECRET = process.env.JWT_SECRET;
 
@@ -9,15 +9,15 @@ const verifyToken = (req: NextRequest): string | boolean => {
 
 	let _id;
 
-	if (!JWT_SECRET) return false
+	if (!JWT_SECRET)
+		res.status(404).json({ message: 'No secret found.' })
 
 	try {
-		const user = jwt.verify(token, JWT_SECRET)
-		_id = user.id;
-		return _id;
+		const user = jwt.verify(token, JWT_SECRET as string)
+		res.status(200).json({ _id: user.id })
 	}
 	catch (err) {
-		return false;
+		res.status(403).json({ message: 'Failed to verify token.' })
 	}
 
 }

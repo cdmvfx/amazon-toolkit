@@ -71,7 +71,7 @@ const AuthForm = (props: AuthFormProps) => {
 			justify="center"
 			bg={useColorModeValue('gray.50', 'gray.800')}
 		>
-			<Stack spacing={8} mx={'auto'} maxW="lg" py={12} px={6}>
+			<Stack spacing={8} mx={'auto'} align="center" maxW="lg" py={12} px={6}>
 				<Stack align="center">
 					<Heading fontSize={'4xl'} textAlign="center">
 						{title}
@@ -85,7 +85,7 @@ const AuthForm = (props: AuthFormProps) => {
 					padding={8}
 					borderRadius={10}
 					boxShadow={'2xl'}
-					width="s"
+					minWidth="400px"
 				>
 					<Stack spacing={6}>
 						{

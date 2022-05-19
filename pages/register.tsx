@@ -1,14 +1,14 @@
 import { GetServerSideProps } from "next"
-import Forgot from "../src/components/auth/Forgot"
+import Register from "../src/components/auth/Register"
 import { verifyToken } from "../src/utilities/basicAuth"
 
-const forgot = () => {
+const register = () => {
 	return (
-		<Forgot />
+		<Register />
 	)
 }
 
-export default forgot
+export default register
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
 	return verifyToken(context)

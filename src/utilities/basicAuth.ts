@@ -1,16 +1,11 @@
 import jwt from "jsonwebtoken";
+import { GetServerSidePropsContext } from "next";
 
-export const authUser = (req, res) => {
-	if (req.user == null) {
-		return res.status(403).json({success: false, message: "You are not signed in."})
-	}
-}
-
-export const verifyToken = (context) => {
+export const verifyToken = (context: GetServerSidePropsContext) => {
 
 	const path = context.resolvedUrl
 
-	const publicRoutes = ['/', '/login', '/reset'];
+	const publicRoutes = ['/', '/login', '/reset', '/register'];
 
 	const token = context.req.cookies['ReviewGet']
 	const JWT_SECRET = process.env.JWT_SECRET;
@@ -31,9 +26,19 @@ export const verifyToken = (context) => {
 	}
 
 	try {
-		const user = jwt.verify(token, JWT_SECRET)
+		const user = jwt.verify(token, JWT_SECRET as string)
+
+		if (['/login', '/reset', '/forgot', '/register'].includes(path)) {
+			return {
+				redirect: {
+					destination: '/dashboard',
+					permanent: false,
+				},
+			}
+		}
+
 		return {
-			props: { signedIn: true, token },
+			props: { signedIn: true, token: token },
 		}
 	}
 	catch (err) {

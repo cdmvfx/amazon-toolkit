@@ -1,10 +1,10 @@
 import jwt from "jsonwebtoken";
-import { NextApiRequest, NextApiResponse } from "next";
+import { NextApiHandler } from "next";
 import dbConnect from '../../../lib/dbConnect';
 import User from "../../../src/models/user";
 import bcrypt from 'bcrypt';
 
-export default async function handler(req, res) {
+const handler: NextApiHandler = async (req, res) => {
 
 	const {method} = req;
 
@@ -94,3 +94,5 @@ export default async function handler(req, res) {
 			break;
 	}
 }
+
+export default handler;

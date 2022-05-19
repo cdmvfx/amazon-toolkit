@@ -7,6 +7,14 @@ import ProductSettings from '../../../../src/components/dashboard/forms/new/Prod
 import Title from '../../../../src/components/dashboard/forms/new/Title'
 import { selectProducts } from '../../../../src/features/product/productsSlice'
 
+/*
+Ensure products exist for the current user.
+
+1: title + description
+2: 
+
+*/
+
 
 const Page = ({step, data, handleChange}: {step: number, data: ReviewFormData, handleChange: (key: string, val: string) => void }): JSX.Element => {
 	switch (step) {

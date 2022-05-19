@@ -2,8 +2,9 @@ import jwt from "jsonwebtoken";
 import dbConnect from '../../../lib/dbConnect';
 import User from "../../../src/models/user";
 import bcrypt from 'bcrypt';
+import { NextApiHandler } from "next";
 
-export default async function handler(req, res) {
+const handler: NextApiHandler = async (req, res) => {
 
 	const { newPassword, confirmNewPassword, uid, token } = req.body
 
@@ -53,3 +54,5 @@ export default async function handler(req, res) {
 
 
 }
+
+export default handler;

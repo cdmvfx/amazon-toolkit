@@ -26,7 +26,11 @@ const Reset = () => {
 
 	const [alert, setAlert] = useState<AuthFormAlert>({ type: '', message: '' })
 
+	const [disabled, setDisabled] = useState(false)
+
 	const handleSubmit = async () => {
+
+		setDisabled(true)
 
 		const data = {
 			...values,
@@ -48,6 +52,7 @@ const Reset = () => {
 					type: 'error',
 					message: err.response?.data.error
 				})
+				setDisabled(false)
 				console.log(err.response)
 			})
 	}
@@ -59,7 +64,8 @@ const Reset = () => {
 			fields={fields}
 			primaryAction={{
 				content: 'Change password',
-				onAction: handleSubmit
+				onAction: handleSubmit,
+				disabled: disabled
 			}}
 			values={values}
 			setValues={setValues}
