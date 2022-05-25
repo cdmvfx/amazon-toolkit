@@ -5,7 +5,7 @@ export const verifyToken = (context: GetServerSidePropsContext) => {
 
 	const path = context.resolvedUrl
 
-	const publicRoutes = ['/', '/login', '/reset', '/register'];
+	const publicRoutes = ['/', '/login', '/reset', '/register', '/forgot'];
 
 	const token = context.req.cookies['ReviewGet']
 	const JWT_SECRET = process.env.JWT_SECRET;

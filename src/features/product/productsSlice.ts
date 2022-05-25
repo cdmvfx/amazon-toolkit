@@ -43,19 +43,17 @@ export const productsSlice = createSlice({
 })
 
 export const fetchProducts = createAsyncThunk('products/fetchProducts', async () => {
-	const response = await axios.get('/api/products')
+	
+	return await axios.get('/api/products')
 		.then((res) => {
-			console.log('Products fetched.', res.data);
 			return res.data.payload;
 		})
 		.catch((err) => {
-			console.error('Failed to fetch products.', err);
 			return `fetchProducts failed to get products ${err}`;
 		})
-	return response;
 })
 
 
-export const selectProducts = (state: AppState) => state.products.products
+export const selectProducts = (state: AppState) => state.products
 
 export default productsSlice.reducer

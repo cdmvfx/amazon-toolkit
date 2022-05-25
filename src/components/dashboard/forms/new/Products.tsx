@@ -10,19 +10,14 @@ const Products = ({data, handleChange}: {data: ReviewFormData, handleChange: (ke
 
 	const dispatch = useDispatch()
 
-	const products = useSelector(selectProducts)
-	const productsStatus = useSelector((state: AppState) => state.products.status)
-
-	console.log('Products')
-	console.log(products)
-
-	const [fetchProductsStatus, setFetchProductsStatus] = useState('idle')
+	const productsState = useSelector(selectProducts)
+	const products = productsState.products;
 
 	useEffect(() => {
-    if (fetchProductsStatus === 'idle') {
+    if (productsState.status === 'idle') {
       dispatch(fetchProducts())
     }
-  }, [fetchProductsStatus, dispatch])
+  }, [dispatch])
 
 	const handleCheck = (id: string) => {
 

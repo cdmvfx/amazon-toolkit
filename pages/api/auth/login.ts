@@ -15,7 +15,7 @@ const handler: NextApiHandler = async (req, res) => {
 	
 	await dbConnect();
 
-	const KEY = process.env.JWT_SECRET
+	const KEY = process.env.JWT_SECRET as string;
 
 	const {email, password} = req.body;
 

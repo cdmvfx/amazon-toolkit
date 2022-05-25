@@ -58,7 +58,7 @@ const Navbar = ({ signedIn }: {signedIn: boolean}) => {
           >
             <Stack direction={'row'} spacing={6}>
               {NAV_ITEMS.map((navItem) => (
-                <Link href={navItem.href}>
+                <Link href={navItem.href} key={navItem.href}>
                   <Text p={2}>{navItem.label}</Text>
                 </Link>
               ))}
@@ -97,7 +97,7 @@ const Navbar = ({ signedIn }: {signedIn: boolean}) => {
           onClick={onToggle}
         >
           {NAV_ITEMS.map((navItem) => (
-            <Flex py={2}>
+            <Flex py={2} key={navItem.href}>
               <Link href={navItem.href}>
                 <Text>{navItem.label}</Text>
               </Link>
