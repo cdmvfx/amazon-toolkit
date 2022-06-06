@@ -72,7 +72,7 @@ const Navbar = ({ signedIn }: {signedIn: boolean}) => {
             <Stack direction={'row'} spacing={6}>
               {!signedIn ? (
                 <>
-                  <Link href="/login">
+                  <Link href="/auth/login">
                     <Text p={2}>Login</Text>
                   </Link>
                   <Button>

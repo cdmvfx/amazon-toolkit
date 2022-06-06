@@ -1,7 +1,7 @@
 import { Checkbox, CheckboxGroup, Stack, StackItem, Text } from "@chakra-ui/react"
 import { useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
-import { ReviewFormData } from "../../../../../pages/dashboard/review-forms/new"
+import { ReviewFormData } from "../../../../../pages/app/forms/new"
 import { AppState } from "../../../../app/store"
 import { fetchProducts, selectProducts } from "../../../../features/product/productsSlice"
 import { selectSettings } from "../../../../features/settings/settingsSlice"

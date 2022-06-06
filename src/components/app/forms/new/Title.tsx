@@ -1,5 +1,5 @@
 import { Input, StackItem, Text, Textarea } from "@chakra-ui/react"
-import { ReviewFormData } from "../../../../../pages/dashboard/review-forms/new"
+import { ReviewFormData } from "../../../../../pages/app/forms/new"
 
 const Title = ({data, handleChange}: {data: ReviewFormData, handleChange: (key: string, val: any) => void}) => {
 	return (

@@ -2,7 +2,8 @@ import axios from 'axios';
 import { NextApiHandler } from 'next';
 import hmacSHA256 from 'crypto-js/hmac-sha256';
 import Base64 from 'crypto-js/enc-base64';
-import jwt from "jsonwebtoken";
+import * as jose from 'jose'
+import User from "../../../src/models/user";
 
 // When a merchant approves app permissions and clicks 'Install app',
 // a GET request will be made to this endpoint.
@@ -15,57 +16,87 @@ const handler: NextApiHandler = async (req, res) => {
 
 	const client_secret = process.env.SHOPIFY_API_SECRET as string
 
-	console.log('All query', req.query);
-
 	// Get all parameters in URL.
 	const code = req.query.code;
 	const hmac = req.query.hmac;
 	const host = req.query.host;
-	const shop = req.query.shop;
+	const shop = req.query.shop as string;
 	const nonce = req.query.state as string;
 	const timestamp = req.query.timestamp;
 
-	const string = `code=${code}&host=${host}&shop=${shop}&state=${nonce}&timestamp=${timestamp}`;
+	if (!code || !hmac || !host || !shop || !nonce || !timestamp) {
+		return res.status(403).json({status: 'failed', message: 'Missing parameters.'}); 
+	}
 
+	
+	// Remove HMAC, restructure the query,
+	// hash the string using the Shopify app secret,
+	// then compare to the HMAC
+	const string = `code=${code}&host=${host}&shop=${shop}&state=${nonce}&timestamp=${timestamp}`;
 	const base64String = Base64.stringify(hmacSHA256(string, client_secret));
 	const signedString = Base64.parse(base64String).toString();
-
-	console.log('HMAC compare', hmac, signedString);
 	if (hmac !== signedString) {
-		console.log('Invalid HMAC');
-		res.status(403).json({status: 'failed', message: 'Invalid HMAC.'}); 
+		return res.status(403).json({status: 'failed', message: 'Invalid HMAC.'}); 
 	}
 
+	// Get nonce from cookies and compare to nonce in query.
+	const nonce_cookies = req.cookies.ReviewGetNonce;
+	if (nonce_cookies !== nonce) {
+		return res.status(403).json({status: 'failed', message: 'Invalid nonce.'});
+	}
+
+	// Verify the nonce is legitimate.
 	try {
-		const token = jwt.verify(nonce, client_secret);
+		const jwk = await jose.importJWK({kty: 'oct', k: process.env.SHOPIFY_AUTH_JWK}, 'HS256')
+		await jose.jwtVerify(nonce, jwk)
 	}
 	catch (e) {
-		console.log('Invalid JWT.');
-		res.status(403).json({status: 'failed', message: 'Invalid JWT.'}); 
+		return res.status(403).json({status: 'failed', message: 'Invalid JWT.'}); 
 	}
 
-	return;
+	// Verify the shop is a valid hostname.
+	if (!shop.match(/^[a-zA-Z0-9][a-zA-Z0-9\-]*.myshopify.com/)) {
+		return res.status(403).json({status: 'failed', message: 'Invalid hostname.'}); 
+	}
+
 
 	// If all security checks pass, exchange the access code for a permanent token.
-	if (!true) {
 
-		const client_id = process.env.SHOPIFY_API_CLIENT
+	const client_id = process.env.SHOPIFY_API_CLIENT
 
-		const access_token = await axios.post(`https://${shop}/admin/oauth/access_token`, {
-			client_id,
-			client_secret,
-			code 
+	const shopify_res = await axios.post(`https://${shop}/admin/oauth/access_token`, {
+		client_id,
+		client_secret,
+		code 
+	})
+		.then((res) => {
+			return {
+				success: true,
+				message: 'Successfully got access token.',
+				payload: res.data
+			}
 		})
-			.then((res) => {
-				console.log('Successfully got access token.', res.data);
-				return res.data.access_token
-			})
-			.catch((err) => {
-				console.log('Failed to get access token,', err)
-			})
+		.catch((err: string) => {
+			return { success: false, message: err, payload: {} }
+		})
+
+	if (!shopify_res.success) {
+		return res.status(403).json({status: 'failed', message: shopify_res.message}); 
 	}
 
-	res.status(200).json({status: 'success', message: 'Successfully stored access token.'});
+	const scopes = process.env.SHOPIFY_API_SCOPES
+
+	if (scopes != shopify_res.payload.scope) {
+		return res.status(403).json({status: 'failed', message: 'Invalid scopes.'}); 
+	}
+
+	const access_token = shopify_res.payload.access_token;
+
+	const response = await User.updateOne({_id: })
+
+	return res.status(200).json({status: 'success', message: 'Auth success!', access_token: access_token}); 
+	
+
 }
 
 

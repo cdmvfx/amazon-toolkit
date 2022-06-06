@@ -1,6 +1,6 @@
 import { Box, CheckboxGroup, FormControl, FormHelperText, FormLabel, Heading, Input, InputGroup, InputLeftAddon, InputRightAddon, Select, Stack, StackItem, Text } from "@chakra-ui/react"
 import { ChangeEvent } from "react"
-import { DiscountType, ReviewFormData, RewardType } from "../../../../../pages/dashboard/review-forms/new"
+import { DiscountType, ReviewFormData, RewardType } from "../../../../../pages/app/forms/new"
 
 
 const ProductSettings = ({data, handleChange}: {data: ReviewFormData, handleChange: (key: string, val: array) => void}) => {

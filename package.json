@@ -13,6 +13,8 @@
     "@emotion/styled": "^11.8.1",
     "@reduxjs/toolkit": "^1.7.2",
     "@shopify/shopify-api": "^2.1.0",
+    "@types/bcrypt": "^5.0.0",
+    "@types/cookie": "^0.5.1",
     "@types/crypto-js": "^4.1.1",
     "@types/next": "^9.0.0",
     "axios": "^0.26.0",

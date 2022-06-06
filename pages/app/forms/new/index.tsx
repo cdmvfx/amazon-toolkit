@@ -1,10 +1,10 @@
 import { Box, Button, ButtonGroup, Center, Flex, Input, Stack, StackItem, Text, useColorModeValue, VStack } from '@chakra-ui/react'
 import { useState } from 'react'
 import { useSelector } from 'react-redux'
-import DashboardPage from '../../../../src/components/dashboard/DashboardPage'
-import Products from '../../../../src/components/dashboard/forms/new/Products'
-import ProductSettings from '../../../../src/components/dashboard/forms/new/ProductSettings'
-import Title from '../../../../src/components/dashboard/forms/new/Title'
+import DashboardPage from '../../../../src/components/app/DashboardPage'
+import Products from '../../../../src/components/app/forms/new/Products'
+import ProductSettings from '../../../../src/components/app/forms/new/ProductSettings'
+import Title from '../../../../src/components/app/forms/new/Title'
 import { selectProducts } from '../../../../src/features/product/productsSlice'
 
 /*

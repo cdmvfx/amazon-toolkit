@@ -36,7 +36,7 @@ const handler: NextApiHandler = async (req, res) => {
 				reset: true
 			}, key)
 
-			const link = `http://localhost:3000/reset/${user._id}/${token}`
+			const link = `http://localhost:3000/auth/reset/${user._id}/${token}`
 
 			// to do: send email with reset link
 

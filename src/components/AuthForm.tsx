@@ -132,7 +132,7 @@ const AuthForm = (props: AuthFormProps) => {
 													...values,
 													rememberMe: !values.rememberMe
 												})}>Remember me</Checkbox>
-											<Link color={'blue.400'} href='/reset' >Forgot password?</Link>
+											<Link color={'blue.400'} href='/auth/forgot' >Forgot password?</Link>
 										</Stack>
 									)
 								}

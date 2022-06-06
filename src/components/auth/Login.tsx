@@ -35,11 +35,10 @@ const Login = (props: Props) => {
 
 		const data = { ...values }
 
-		const res = axios
+		axios
 			.post('/api/auth/login', data)
 			.then((res) => {
-				console.log('Login response', res);
-				return res.data;
+				setAlert({type: 'success', message: 'Successfully logged in. Redirecting.'})
 			})
 			.catch((err) => {
 				console.error('Login error', err.response);

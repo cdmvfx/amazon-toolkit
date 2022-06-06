@@ -1,10 +1,8 @@
 import { verifyToken } from '../../src/utilities/basicAuth'
-import DashboardPage from '../../src/components/dashboard/DashboardPage'
-import { useOAuth } from "shopify-nextjs-toolbox";
+import DashboardPage from '../../src/components/app/DashboardPage'
 
 const dashboard = () => {
 
-	useOAuth();
 
 	return (
 		<DashboardPage>
