@@ -3,6 +3,7 @@ import dbConnect from '../../../lib/dbConnect';
 import User from "../../../src/models/User";
 import bcrypt from 'bcrypt';
 import { NextApiHandler } from "next";
+import { ResetJWT } from "./forgot";
 
 const handler: NextApiHandler = async (req, res) => {
 
@@ -36,7 +37,7 @@ const handler: NextApiHandler = async (req, res) => {
 
 		const resetData = jwt.verify(token, key)
 
-		if (!resetData.reset) {
+		if (typeof resetData == 'string' || !resetData.reset) {
 			throw new Error('Not a reset token.')
 		}
 

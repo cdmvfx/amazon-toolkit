@@ -1,5 +1,6 @@
 import { NextApiRequest } from 'next';
 import { jwtVerify } from 'jose'
+import { LoginJWT } from 'pages/api/auth/login';
 
 const verifyToken = async (req: NextApiRequest) => {
 
@@ -25,7 +26,7 @@ const verifyToken = async (req: NextApiRequest) => {
 		const verify = await jwtVerify(token, new TextEncoder().encode(JWT_SECRET))
 		return {
 			success: true,
-			payload: verify.payload
+			payload: verify.payload as LoginJWT
 		}
 	}
 	catch (err) {

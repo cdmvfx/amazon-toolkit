@@ -92,14 +92,12 @@ const handler: NextApiHandler = async (req, res) => {
 
 	const access_token = shopify_res.payload.access_token;
 
-	const response = await User.updateOne({_id: })
+	// To do: update user document in database.
+	// const response = await User.updateOne({_id: })
 
 	return res.status(200).json({status: 'success', message: 'Auth success!', access_token: access_token}); 
 	
 
 }
-
-
-
 
 export default handler;

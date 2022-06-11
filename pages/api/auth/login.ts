@@ -5,6 +5,12 @@ import bcrypt from 'bcrypt';
 import { serialize } from 'cookie'
 import { NextApiHandler } from 'next'
 
+export type LoginJWT = {
+	id: string
+	email: string
+	role: string
+}
+
 const handler: NextApiHandler = async (req, res) => {
 
 	if (!req.body) {

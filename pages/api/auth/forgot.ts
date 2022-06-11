@@ -3,6 +3,11 @@ import dbConnect from '../../../lib/dbConnect';
 import { NextApiHandler } from 'next'
 import User from "../../../src/models/User";
 
+export type ResetJWT = {
+	email: string,
+	reset: boolean
+}
+
 const handler: NextApiHandler = async (req, res) => {
 
 	const { email } = req.body

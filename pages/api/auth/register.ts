@@ -3,6 +3,7 @@ import { NextApiHandler } from "next";
 import dbConnect from '../../../lib/dbConnect';
 import User from "../../../src/models/User";
 import bcrypt from 'bcrypt';
+import { MongooseError } from "mongoose";
 
 const handler: NextApiHandler = async (req, res) => {
 
@@ -68,7 +69,7 @@ const handler: NextApiHandler = async (req, res) => {
 					console.log('User created successfully', response)
 					return res.status(200).json({success: true, user: response})
 				}
-				catch (err) {
+				catch (err: any) {
 					console.log(err)
 					if (err.code === 11000) {
 						// Duplicate email
