@@ -80,7 +80,7 @@ const Navbar = ({ signedIn }: {signedIn: boolean}) => {
                   </Button>
                 </>
               ) : (
-                <Link href="/dashboard">
+                <Link href="/app">
                   <Button>Dashboard</Button>
                 </Link>
               )}

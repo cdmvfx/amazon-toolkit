@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 import dbConnect from '../../../lib/dbConnect';
-import User from "../../../src/models/user";
+import User from "../../../src/models/User";
 import bcrypt from 'bcrypt';
 import { serialize } from 'cookie'
 import { NextApiHandler } from 'next'

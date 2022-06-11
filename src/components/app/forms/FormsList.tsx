@@ -1,25 +1,15 @@
 import { Box, Button, Divider, Flex, Grid, Heading, HStack, Input, InputGroup, InputLeftAddon, InputRightElement, Link, Spacer, Text, useClipboard, VStack } from "@chakra-ui/react"
-import { useEffect, useState } from "react"
+import { useState } from "react"
+import { ReviewGetUser } from "src/types/User";
 import { ReviewForm } from "../../../types/ReviewForm"
-import { useDispatch, useSelector } from "react-redux"
-import { fetchProducts, selectProducts } from "../../../features/product/productsSlice"
 
-const FormsList = () => {
+type FormsListProps = {
+	user: ReviewGetUser
+}
 
-	const dispatch = useDispatch()
+const FormsList = ({user}: FormsListProps) => {
 
-	const productsState = useSelector(selectProducts)
-	const products = productsState.products;
-
-	console.log(productsState);
-
-	// Fix fetchProducts to use the client side verifyToken
-
-	useEffect(() => {
-    if (productsState.status === 'idle') {
-      dispatch(fetchProducts())
-    }
-  }, [])
+	console.log('user', user);
 
 	const forms: ReviewForm[] = [
 		{
@@ -45,10 +35,7 @@ const FormsList = () => {
 	const [newFormAlert, setNewFormAlert] = useState('')
 
 	const openNewForm = () => {
-		if (!products?.length) {
-			console.log(productsState)
-			setNewFormAlert('Please link at least one product in settings before creating a form.')
-		}
+		console.log('opening new')
 	}
 
 	return (
@@ -79,7 +66,7 @@ const FormsList = () => {
 
 const ReviewFormItem = ({ form }: { form: ReviewForm }) => {
 
-	const url = "localhost:3000/form/" + form.slug;
+	const url = "/form/" + form.slug;
 
 	return (
 		<Box

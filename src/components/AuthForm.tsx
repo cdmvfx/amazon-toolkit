@@ -104,7 +104,7 @@ const AuthForm = (props: AuthFormProps) => {
 
 								if (item.name === 'password' || item.name === 'confirmNewPassword' || item.name === 'newPassword') {
 									return (
-											<FormControl variant="floating" id={item.name} isRequired>
+											<FormControl variant="floating" id={item.name} isRequired key={item.name}>
 											<Input type={values.showPassword ? 'text' : 'password'} name={item.name} onChange={(e) => handleChange(e)} />
 											<FormLabel>{item.label}</FormLabel>
 											{
@@ -127,6 +127,7 @@ const AuthForm = (props: AuthFormProps) => {
 											direction={{ base: 'column', sm: 'row' }}
 											align={'start'}
 											justify={'space-between'}
+											key={item.name}
 										>
 											<Checkbox checked={values.rememberMe} onChange={() => setValues({
 													...values,

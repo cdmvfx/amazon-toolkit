@@ -34,11 +34,15 @@ const Login = (props: Props) => {
 
 		const data = { ...values }
 
-		const res = axios
+		axios
 			.post('/api/auth/login', data)
 			.then((res) => {
-				console.log('Login response', res);
-				return res.data;
+				if (!res.data.success) {
+					setAlert({type: 'error', message: 'Failed to login.'})
+				}
+				else {
+					window.open('/app', '_self')
+				}
 			})
 			.catch((err) => {
 				console.error('Login error', err.response);

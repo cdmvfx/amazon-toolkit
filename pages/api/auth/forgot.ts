@@ -1,7 +1,7 @@
 import jwt from "jsonwebtoken";
 import dbConnect from '../../../lib/dbConnect';
-import User from "../../../src/models/user";
 import { NextApiHandler } from 'next'
+import User from "../../../src/models/User";
 
 const handler: NextApiHandler = async (req, res) => {
 

@@ -1,12 +1,13 @@
 import { createAsyncThunk, createSlice, PayloadAction, nanoid } from '@reduxjs/toolkit'
 import axios from 'axios'
+import { Settings, SettingsCategory } from 'src/types/Settings'
 
 import type { AppState, AppThunk } from '../../app/store'
 
 export interface SettingsState {
 	status: 'idle' | 'loading' | 'succeeded' | 'failed',
   error: string | null,
-	settings: any
+	settings: Settings
 }
 
 const initialState: SettingsState = {
@@ -35,19 +36,9 @@ export const settingsSlice = createSlice({
 			})
 			.addCase(editSettings.fulfilled, (state, action) => {
 				state.status = 'succeeded';
-				state.settings = action.payload.settings;
+				state.settings[action.payload.category] = action.payload.settings;
 			})
 	}
-})
-
-export const editSettings = createAsyncThunk('settings/editSettings', async (settings) => {
-
-
-	const res = await axios.post('/api/settings', settings)
-		.then((res) => res.data)
-		.catch((err) => console.error(err) )
-
-	return res;
 })
 
 export const fetchSettings = createAsyncThunk('settings/fetchSettings', async () => {
@@ -61,6 +52,21 @@ export const fetchSettings = createAsyncThunk('settings/fetchSettings', async ()
 			return `fetchSettings failed to get settings ${err}`;
 		})
 	return response;
+})
+
+
+type EditsRequest = {
+	category: SettingsCategory
+	edits: any
+}
+
+export const editSettings = createAsyncThunk('settings/editSettings', async (editsRequest: EditsRequest) => {
+
+	const res = await axios.post('/api/settings', editsRequest)
+		.then((res) => res.data)
+		.catch((err) => console.error(err) )
+
+	return res;
 })
 
 

@@ -1,6 +1,8 @@
 import { NextFetchEvent, NextRequest, NextResponse } from 'next/server'
 import { jwtVerify } from 'jose'
 
+// Overall app login verifier.
+
 export async function middleware(req: NextRequest, ev: NextFetchEvent) {
 
 	const token = req.cookies['ReviewGet'];
@@ -14,7 +16,6 @@ export async function middleware(req: NextRequest, ev: NextFetchEvent) {
 	const JWT_SECRET = process.env.JWT_SECRET;
 
 	try {
-		// console.log('Signed in. Proceeding to dashboard.');
 		const user = await jwtVerify(token, new TextEncoder().encode(JWT_SECRET))
 		return NextResponse.next()
 	}

@@ -2,11 +2,9 @@ import { NextApiHandler } from 'next';
 import { NextRequest, NextResponse } from 'next/server';
 import dbConnect from '../../../lib/dbConnect';
 import User from "../../../src/models/user";
-import verifyToken from '../auth/verifyToken'
 
 const handler: NextApiHandler = async (req, res) => {
 
-	const _id = verifyToken(req, req);
 
 	if (!_id) return res.status(403).json({success: false, error: "Invalid request."});
 

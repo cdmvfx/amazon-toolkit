@@ -1,10 +1,15 @@
 import { Box, Heading, Tab, TabList, Tabs, useColorModeValue } from "@chakra-ui/react"
-import { useState } from "react"
+import { Dispatch, SetStateAction } from "react"
+import { NavChild, NavParent } from "./DashboardPage"
 
-const Header = ({ activeFeature }) => {
+type HeaderProps = {
+	activePage: NavParent
+	activeChildIndex: number
+	setActiveChildIndex: Dispatch<SetStateAction<number>>
+}
 
-	const [headerIndex, setHeaderIndex] = useState(0)
-
+const Header = ({activePage, activeChildIndex, setActiveChildIndex}: HeaderProps) => {
+	
 	return (
 		<Box
 			w="100%"
@@ -13,20 +18,7 @@ const Header = ({ activeFeature }) => {
 			borderBottom="1px solid"
 			borderBottomColor="gray.300"
 		>
-			<Heading mb={4}>{activeFeature.label}</Heading>
-			{
-				activeFeature.children &&
-				<Tabs width="full" index={headerIndex} onChange={(val) => setHeaderIndex(val)}>
-					<TabList>
-						{
-							activeFeature.children.map((parent) => (
-								<Tab key={parent.key}>{parent.label}</Tab>
-							))
-						}
-					</TabList>
-				</Tabs>
-			}
-
+			<Heading mb={4}>{activePage.children ? activePage.children[activeChildIndex].label : activePage.label }</Heading>
 		</Box>
 	)
 }

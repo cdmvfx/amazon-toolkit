@@ -46,31 +46,19 @@ const UserSchema = new mongoose.Schema(
 			}
 		}],
 		settings: {
-			shop: {
-				hostname: {
-					type: String,
-					required: [true, 'Please provide a hostname.']
-				},
-				access_token: {
-					type: String,
-					required: [true, 'Please provide an access token.']
-				},
-				products: [{
-					name: { 
-						type: String, 
-						required: [true, 'Please provide a name for the product.'],
-						unique: true 
-					},
-					asin: { 
-						type: String, 
-						required: [true, 'Please provide the Amazon ASIN.']
-					},
-					shopify_variant_id: { 
-						type: String, 
-						required: [true, 'Please provide the Shopify Variant ID.']
-					}
-				}]
-			}
+			general: {
+				companyName: String,
+				contactEmail: String,
+				contactPhone: String
+			},
+			shops: [
+				{
+					name: String,
+					shopUrl: String,
+					accessToken: String,
+					type: String
+				}
+			]
 		}
   },
   { collection: 'users' }
