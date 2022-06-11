@@ -3,7 +3,6 @@ import { useRouter } from "next/router"
 import { Dispatch, SetStateAction, useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { AppState } from "src/app/store"
-import FormsNew from "src/components/app/forms/new"
 import { fetchForms, selectForms } from "src/features/forms/formsSlice"
 import { ReviewGetUser } from "src/types/User"
 import DashboardPage, { NavChild, NavParent, navTree } from "../../../src/components/app/DashboardPage"
@@ -50,7 +49,7 @@ const index = () => {
 		case 'new':
 			return (
 				<DashboardPage activePage={activePage} activeChildIndex={activeChildIndex} setActiveChildIndex={setActiveChildIndex} >
-					<FormsNew />
+					<Box>New Form</Box>
 				</DashboardPage>
 			)
 		default:
