@@ -1,36 +1,39 @@
 import { Box, Button, Divider, Flex, Grid, Heading, HStack, Input, InputGroup, InputLeftAddon, InputRightElement, Link, Spacer, Text, useClipboard, VStack } from "@chakra-ui/react"
 import { useState } from "react"
-import { ReviewGetUser } from "src/types/User";
 import { ReviewForm } from "../../../types/ReviewForm"
 
 type FormsListProps = {
-	user: ReviewGetUser
+	forms: ReviewForm[]
 }
 
-const FormsList = ({user}: FormsListProps) => {
+const FormsList = ({forms}: FormsListProps) => {
 
-	console.log('user', user);
+	console.log('Forms', forms);
 
-	const forms: ReviewForm[] = [
-		{
-			fid: 'fdsfsfsf',
-			uid: 'user1',
-			title: "Main Form",
-			desc: "The first for testing.",
-			slug: "main-form",
-			pages: [],
-			config: {}
-		},
-		{
-			fid: 'gfdgdgd',
-			uid: 'user1',
-			title: "Testing Form",
-			desc: "The second for testing.",
-			slug: "test-form",
-			pages: [],
-			config: {}
-		}
-	]
+	// const forms: ReviewForm[] = [
+	// 	{
+	// 		fid: 'fdsfsfsf',
+	// 		uid: 'user1',
+	// 		title: "Main Form",
+	// 		desc: "The first for testing.",
+	// 		slug: "main-form",
+	// 		pages: [],
+	// 		config: {
+	// 			marketplaces: {
+	// 				amazon: true
+	// 			}
+	// 		}
+	// 	},
+	// 	{
+	// 		fid: 'gfdgdgd',
+	// 		uid: 'user1',
+	// 		title: "Testing Form",
+	// 		desc: "The second for testing.",
+	// 		slug: "test-form",
+	// 		pages: [],
+	// 		config: {}
+	// 	}
+	// ]
 
 	const [newFormAlert, setNewFormAlert] = useState('')
 

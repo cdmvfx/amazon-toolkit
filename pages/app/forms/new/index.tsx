@@ -82,7 +82,6 @@ const FormNew = () => {
 	console.log(data)
 
 	return (
-		<DashboardPage>
 			<Center>
 				<Stack spacing={8} pt={8}>
 					<Page step={step} data={data} handleChange={handleChange} />
@@ -94,7 +93,6 @@ const FormNew = () => {
 					</StackItem>
 				</Stack>
 			</Center>
-		</DashboardPage>
 	)
 }
 export default FormNew

@@ -1,15 +1,13 @@
 import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit'
 
 import settingsReducer from '../features/settings/settingsSlice'
-import formsReducer from '../features/form/formsSlice'
-import productsReducer from '../features/product/productsSlice'
+import formsReducer from '../features/forms/formsSlice'
 
 export function makeStore() {
   return configureStore({
     reducer: { 
 			settings: settingsReducer,
 			forms: formsReducer,
-			products: productsReducer
 		},
   })
 }
