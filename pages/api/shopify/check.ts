@@ -3,7 +3,7 @@
 // If it isn't, return the installation URL.
 
 import { NextApiHandler } from "next";
-import user from "src/models/user";
+import User from "src/models/User";
 import * as jose from 'jose'
 import { serialize } from 'cookie'
 
@@ -11,7 +11,7 @@ const handler: NextApiHandler = async (req, res) => {
 
 	const shop = req.body.shop
 
-	const result = await user
+	const result = await User
 		.find({
 			'settings.shops': {
 				'$elemMatch': {

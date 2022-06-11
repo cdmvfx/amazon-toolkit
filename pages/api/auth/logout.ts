@@ -11,11 +11,11 @@ const handler: NextApiHandler = async (req, res) => {
 		return res.status(401).json({success: false, message: "You are already logged out."})
 	}
 
-	const serialized = serialize("ReviewGet", null, {
+	const serialized = serialize("ReviewGet", '', {
 		httpOnly: true,
 		secure: process.env.NODE_ENV !== "development",
 		sameSite: "strict",
-		maxAge: 60 * 60 * 24 * 30,
+		maxAge: 0,
 		path: "/"
 	})
 

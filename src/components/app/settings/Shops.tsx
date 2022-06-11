@@ -16,15 +16,8 @@ const Shops = ({settings, handleChange, saveChanges}: SettingsSectionProps) => {
 		name: ''
 	})
 
-	const handleShopType = (type: 'shopify' | 'manual') => {
-		const changes = {...newShop}
-		changes.type = type
-		setNewShop(changes)
-		console.log(changes)
-	}
-
 	const handleNewChange = (key: string, val: string) => {
-		const changes = {...newShop}
+		const changes: any = {...newShop}
 		changes[key] = val
 		setNewShop(changes)
 	}

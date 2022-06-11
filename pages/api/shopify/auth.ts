@@ -3,7 +3,7 @@ import { NextApiHandler } from 'next';
 import hmacSHA256 from 'crypto-js/hmac-sha256';
 import Base64 from 'crypto-js/enc-base64';
 import * as jose from 'jose'
-import User from "../../../src/models/user";
+import User from "src/models/User";
 
 // When a merchant approves app permissions and clicks 'Install app',
 // a GET request will be made to this endpoint.
