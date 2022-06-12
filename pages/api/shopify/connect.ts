@@ -6,16 +6,28 @@ import { NextApiHandler } from "next";
 import User from "src/models/User";
 import * as jose from 'jose'
 import { serialize } from 'cookie'
+import dbConnect from "lib/dbConnect";
+import verifyToken from "lib/verifyToken";
 
 const handler: NextApiHandler = async (req, res) => {
 
-	const shop = req.body.shop
+	const token = await verifyToken(req);
+
+	if (!token.success) return res.status(403).json({success: false, message: token.payload});
+
+	await dbConnect();
+
+	const { id } = token.payload as jose.JWTPayload;
+
+	const shopName = req.body.shopName
+
+	const shopUrl = `${shopName}.myshopify.com`
 
 	const result = await User
 		.find({
 			'settings.shops': {
 				'$elemMatch': {
-					'shopUrl': shop, 
+					'shopUrl': shopUrl, 
 					'type': 'shopify'
 				}
 			}
@@ -29,7 +41,7 @@ const handler: NextApiHandler = async (req, res) => {
 	// Create a nonce JWT to persist as HTTPonly cookie.
 	const jwk = await jose.importJWK({ kty: 'oct', k: process.env.SHOPIFY_AUTH_JWK }, 'HS256')
 
-	const nonce = await new jose.SignJWT({ shop, timestamp: new Date().getTime() })
+	const nonce = await new jose.SignJWT({ shopUrl, timestamp: new Date().getTime() })
 		.setProtectedHeader({ alg: 'HS256' })
 		.setIssuedAt()
 		.setExpirationTime('1h')
@@ -41,7 +53,7 @@ const handler: NextApiHandler = async (req, res) => {
 	const scopes = process.env.SHOPIFY_API_SCOPES
 	const redirect_uri = process.env.HOST + '/api/shopify/auth'
 	const access_mode = 'value'
-	const redirect = `https://${shop}.myshopify.com/admin/oauth/authorize?client_id=${api_key}&scope=${scopes}&redirect_uri=${redirect_uri}&state=${nonce}&grant_options[]=${access_mode}`
+	const redirect = `https://${shopUrl}/admin/oauth/authorize?client_id=${api_key}&scope=${scopes}&redirect_uri=${redirect_uri}&state=${nonce}&grant_options[]=${access_mode}`
 
 	const serialized = serialize("ReviewGetNonce", nonce, {
 		httpOnly: true,
@@ -50,6 +62,8 @@ const handler: NextApiHandler = async (req, res) => {
 		maxAge: 60 * 60 * 24 * 30,
 		path: "/"
 	})
+
+	const updateRes = await User.updateOne({_id: id}, { $push: { "settings.shops": { status: 'pending', type: 'shopify', shopUrl } } }).lean();
 
 	res.setHeader('Set-Cookie', serialized)
 

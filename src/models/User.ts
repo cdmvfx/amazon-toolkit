@@ -53,10 +53,11 @@ const UserSchema = new mongoose.Schema(
 			},
 			shops: [
 				{
+					status: String,
 					name: String,
 					shopUrl: String,
 					accessToken: String,
-					type: String
+					type: {type: String}
 				}
 			]
 		}

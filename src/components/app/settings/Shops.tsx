@@ -10,7 +10,7 @@ const Shops = ({settings, handleChange, saveChanges}: SettingsSectionProps) => {
 
 	const [newShop, setNewShop] = useState({
 		type: '',
-		shopUrl: '',
+		shopName: '',
 		accessToken: '',
 		name: ''
 	})
@@ -26,14 +26,14 @@ const Shops = ({settings, handleChange, saveChanges}: SettingsSectionProps) => {
 		setNewShop(changes)
 	}
 
-	const connectShop = () => {
+	const connectShop = async () => {
 
 		setConnectAlert({
 			status: 'loading',
 			message: ''
 		})
 
-		axios.post('/api/shopify/check', {shop: newShop.shopUrl})
+		await axios.post('/api/shopify/connect', {shopName: newShop.shopName})
 			.then(res => {
 				console.log('Check success', res)
 
@@ -43,26 +43,44 @@ const Shops = ({settings, handleChange, saveChanges}: SettingsSectionProps) => {
 						message: res.data.message
 					})
 				}
-
-				let i = 1;
-				const connectChecker = setInterval(() => {
-					console.log(`Attempt ${i}`)
-					if (i == 3) {
-						setConnectAlert({
-							status: 'error',
-							message: 'Connection timed out. Please try again.'
-						})
-						clearInterval(connectChecker);
-					}
-					i++
-				}, 5000)
-
-				// window.open(res.data.redirect)
-				
+				return window.open(res.data.redirect)
 			})
 			.catch((err: AxiosError) => {
 				console.error('Failed to check shop.', err.message)
 			})
+		
+		let i = 1;
+
+		const connectChecker = setInterval(async () => {
+			console.log(`Attempt ${i}`)
+
+			await axios.post(`/api/shopify/checkAccessToken`, {shopName: newShop.shopName})
+				.then(res => {
+					if (res.data.success) {
+						setConnectAlert({
+							status: 'success',
+							message: 'Shop connected successfully.'
+						})
+						clearInterval(connectChecker)
+					}
+				})
+				.catch(err => {
+					setConnectAlert({
+						status: 'error',
+						message: 'Failed to check for access token.'
+					})
+					clearInterval(connectChecker)
+				})
+
+			if (i == 20) {
+				setConnectAlert({
+					status: 'error',
+					message: 'Connection timed out. Please try again.'
+				})
+				clearInterval(connectChecker)
+			}
+			i++
+		}, 5000)
 
 	}
 
@@ -113,7 +131,7 @@ const Shops = ({settings, handleChange, saveChanges}: SettingsSectionProps) => {
 										<FormControl isInvalid={!isShopConnected}>
 											<FormLabel>Shop URL</FormLabel>
 											<InputGroup mb={4}>
-												<Input name='shopUrl' onChange={(e) => handleNewChange(e.target.name, e.target.value)} value={newShop.shopUrl} />
+												<Input name='shopName' onChange={(e) => handleNewChange(e.target.name, e.target.value)} value={newShop.shopName} />
 												<InputRightAddon>
 													.myshopify.com
 												</InputRightAddon>
@@ -129,7 +147,7 @@ const Shops = ({settings, handleChange, saveChanges}: SettingsSectionProps) => {
 											}
 											{connectAlert.status !== 'success' && <Button 
 												w='100%' 
-												disabled={!`${newShop.shopUrl}.myshopify.com`.match(/^[a-zA-Z0-9][a-zA-Z0-9-]*.myshopify.com$/) || connectAlert.status === 'loading' ? true : false}
+												disabled={!`${newShop.shopName}.myshopify.com`.match(/^[a-zA-Z0-9][a-zA-Z0-9-]*.myshopify.com$/) || connectAlert.status === 'loading' ? true : false}
 												onClick={connectShop}
 												isLoading={connectAlert.status === 'loading'}
 											>

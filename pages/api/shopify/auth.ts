@@ -4,6 +4,8 @@ import hmacSHA256 from 'crypto-js/hmac-sha256';
 import Base64 from 'crypto-js/enc-base64';
 import * as jose from 'jose'
 import User from "src/models/User";
+import dbConnect from 'lib/dbConnect';
+import verifyToken from 'lib/verifyToken';
 
 // When a merchant approves app permissions and clicks 'Install app',
 // a GET request will be made to this endpoint.
@@ -13,6 +15,11 @@ import User from "src/models/User";
 
 
 const handler: NextApiHandler = async (req, res) => {
+
+	const token = await verifyToken(req);
+	if (!token.success) return res.status(403).json({success: false, message: token.payload});
+	await dbConnect();
+	const { id } = token.payload as jose.JWTPayload;
 
 	const client_secret = process.env.SHOPIFY_API_SECRET as string
 
@@ -27,7 +34,6 @@ const handler: NextApiHandler = async (req, res) => {
 	if (!code || !hmac || !host || !shop || !nonce || !timestamp) {
 		return res.status(403).json({status: 'failed', message: 'Missing parameters.'}); 
 	}
-
 	
 	// Remove HMAC, restructure the query,
 	// hash the string using the Shopify app secret,
@@ -58,7 +64,6 @@ const handler: NextApiHandler = async (req, res) => {
 	if (!shop.match(/^[a-zA-Z0-9][a-zA-Z0-9-]*.myshopify.com/)) {
 		return res.status(403).json({status: 'failed', message: 'Invalid hostname.'}); 
 	}
-
 
 	// If all security checks pass, exchange the access code for a permanent token.
 
@@ -93,9 +98,9 @@ const handler: NextApiHandler = async (req, res) => {
 	const access_token = shopify_res.payload.access_token;
 
 	// To do: update user document in database.
-	// const response = await User.updateOne({_id: })
+	const updateRes = await User.updateOne({_id: id, "settings.shops.shopUrl": shop}, { $set: {"settings.shops.$.accessToken": access_token}})
 
-	return res.status(200).json({status: 'success', message: 'Auth success!', access_token: access_token}); 
+	return res.status(200).send('Installation successful. You may now close this page.');
 	
 
 }
