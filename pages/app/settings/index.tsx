@@ -1,4 +1,4 @@
-import { Box, Text, useToast } from "@chakra-ui/react"
+import { Box, Spinner, Text, useToast } from "@chakra-ui/react"
 import { useRouter } from "next/router"
 import { Dispatch, SetStateAction, useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
@@ -46,10 +46,17 @@ const index = () => {
     }
   }, [settingsStatus, dispatch])
 
+	const [newSettings, setNewSettings] = useState(settings)
+
+	if (settingsStatus === 'idle') {
+		return (
+			<DashboardPage activePage={activePage} activeChildIndex={activeChildIndex} setActiveChildIndex={setActiveChildIndex} >
+				<Box><Spinner />Loading settings...</Box>
+			</DashboardPage>
+		)
+	}
 
 	// Handle new changes.
-
-	const [newSettings, setNewSettings] = useState(settings)
 
 	const handleChange = (cat: SettingsCategory, key: string, val: string) => {
 		const changes = {...newSettings};
