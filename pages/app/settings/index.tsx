@@ -52,7 +52,7 @@ const index = () => {
 	const [newSettings, setNewSettings] = useState(settings)
 
 	const handleChange = (cat: SettingsCategory, key: string, val: string) => {
-		let changes = {...newSettings};
+		const changes = {...newSettings};
 		if (!changes[cat]) changes[cat] = {};
 		if (!changes[cat][key]) changes[cat][key] = '';
 		changes[cat][key] = val;

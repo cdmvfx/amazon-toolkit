@@ -1,6 +1,4 @@
-import { ChangeEvent, Dispatch, FormEvent, SetStateAction, SyntheticEvent, useEffect, useState } from 'react'
-import NextLink from 'next/link'
-import jwt from 'jsonwebtoken'
+import { ChangeEvent, Dispatch, SetStateAction,  } from 'react'
 import {
 	Alert,
 	AlertIcon,
@@ -8,21 +6,17 @@ import {
 	Box,
 	Button,
 	Checkbox,
-	Container,
 	Flex,
 	FormControl,
 	FormLabel,
-	Grid,
 	Heading,
 	Input,
-	InputGroup,
 	InputRightElement,
 	Link,
 	Stack,
 	Text,
 	useColorModeValue,
 } from '@chakra-ui/react'
-import axios from 'axios'
 
 type AuthFormAlertStatus = "info" | "warning" | "success" | "error" | ""
 

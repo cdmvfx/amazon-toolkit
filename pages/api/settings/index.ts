@@ -1,4 +1,4 @@
-import { JWTPayload, JWTVerifyResult } from 'jose';
+import { JWTPayload } from 'jose';
 import verifyToken from 'lib/verifyToken';
 import { NextApiHandler } from 'next';
 import dbConnect from '../../../lib/dbConnect';
@@ -15,16 +15,18 @@ const handler: NextApiHandler = async (req, res) => {
 	const { id } = token.payload as JWTPayload;
 
 	switch(req.method) {
-		case "GET":
+		case "GET":{
 			const user = await User.findOne({_id: id}).lean();
 			return res.status(200).json({success: true, message: 'Retrived settings.', payload: user.settings})
-		case "POST":
+		}
+		case "POST":{
 			const body = req.body;
 			const field = `settings.${body.category}`;
 			const updateRes = await User.updateOne({_id: id}, { $set: { [field]: body.edits } })
 			console.log(body);
 			console.log(updateRes);
 			return res.status(200).json({success: true, message: "Successfully updated settings.", payload: body})
+		}
 	}
 
 

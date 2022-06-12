@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 
-import { Alert, AlertIcon, AlertTitle, Box, Button, CloseButton, Flex, FormControl, FormErrorMessage, FormHelperText, FormLabel, Input, InputGroup, InputRightAddon, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Select, Spinner, Stack, Text, useDisclosure } from '@chakra-ui/react'
+import { Box, Button, Flex, FormControl, FormErrorMessage, FormHelperText, FormLabel, Input, InputGroup, InputRightAddon, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Select, Spinner, Stack, Text, useDisclosure } from '@chakra-ui/react'
 import { SettingsSectionProps } from 'pages/app/settings'
-import { ManualShop, ShopifyShop } from 'src/types/Settings'
 import axios, { AxiosError } from 'axios'
 
 const Shops = ({settings, handleChange, saveChanges}: SettingsSectionProps) => {
@@ -81,7 +80,7 @@ const Shops = ({settings, handleChange, saveChanges}: SettingsSectionProps) => {
 											</InputGroup>
 											<Button 
 												w='100%' 
-												disabled={`${newShop.shopUrl}.myshopify.com`.match(/^[a-zA-Z0-9][a-zA-Z0-9\-]*.myshopify.com$/) ? false : true}
+												disabled={`${newShop.shopUrl}.myshopify.com`.match(/^[a-zA-Z0-9][a-zA-Z0-9-]*.myshopify.com$/) ? false : true}
 												onClick={connectShop}
 											>
 												Connect shop

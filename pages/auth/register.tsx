@@ -37,7 +37,7 @@ const Register = () => {
 
 		const data = { ...values }
 
-		const res = axios
+		axios
 			.post('/api/auth/register', data)
 			.then((res) => {
 				console.log('Register response', res);

@@ -1,7 +1,5 @@
 import { Box, Button, FormControl, FormLabel, Input, Stack, Text } from "@chakra-ui/react"
 import { SettingsSectionProps } from "pages/app/settings"
-import { Settings } from "src/types/Settings"
-
 
 const SettingsGeneral = ({settings, handleChange, saveChanges}: SettingsSectionProps) => {
 

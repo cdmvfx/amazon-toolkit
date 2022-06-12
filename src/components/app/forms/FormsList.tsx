@@ -1,4 +1,4 @@
-import { Box, Button, Divider, Flex, Grid, Heading, HStack, Input, InputGroup, InputLeftAddon, InputRightElement, Link, Spacer, Text, useClipboard, VStack } from "@chakra-ui/react"
+import { Box, Button, Divider, Flex, Grid, Heading, HStack, Input, InputGroup, InputRightElement, Link, Spacer, Text, useClipboard } from "@chakra-ui/react"
 import { useState } from "react"
 import { ReviewForm } from "../../../types/ReviewForm"
 

@@ -55,7 +55,7 @@ const handler: NextApiHandler = async (req, res) => {
 	}
 
 	// Verify the shop is a valid hostname.
-	if (!shop.match(/^[a-zA-Z0-9][a-zA-Z0-9\-]*.myshopify.com/)) {
+	if (!shop.match(/^[a-zA-Z0-9][a-zA-Z0-9-]*.myshopify.com/)) {
 		return res.status(403).json({status: 'failed', message: 'Invalid hostname.'}); 
 	}
 

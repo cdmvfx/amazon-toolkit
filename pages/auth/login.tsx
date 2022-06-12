@@ -2,9 +2,8 @@ import axios from "axios"
 import { useState } from "react"
 import AuthForm, { AuthFormAlert } from "../../src/components/AuthForm";
 
-type Props = {}
 
-const Login = (props: Props) => {
+const Login = () => {
 
 	const fields = [
 		{

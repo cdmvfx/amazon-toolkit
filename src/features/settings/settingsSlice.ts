@@ -13,7 +13,17 @@ export interface SettingsState {
 const initialState: SettingsState = {
 	status: 'idle',
 	error: null,
-	settings: {}
+	settings: {
+		general: {
+			companyName: 'string',
+			contactEmail: 'string',
+			contactPhone: 'string'
+		},
+		shops: [],
+		account: null,
+		billing: null,
+		amazon: null
+	}
 }
 
 export const settingsSlice = createSlice({
@@ -32,11 +42,12 @@ export const settingsSlice = createSlice({
 			})
 			.addCase(fetchSettings.rejected, (state, action) => {
 				state.status = 'failed';
-				state.error = action.payload;
+				state.error = action.error.message as string;
 			})
 			.addCase(editSettings.fulfilled, (state, action) => {
 				state.status = 'succeeded';
-				state.settings[action.payload.category] = action.payload.settings;
+				const category = action.payload.category as string
+				state.settings[category] = action.payload.settings;
 			})
 	}
 })

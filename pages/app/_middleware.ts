@@ -3,7 +3,7 @@ import { jwtVerify } from 'jose'
 
 // Overall app login verifier.
 
-export async function middleware(req: NextRequest, ev: NextFetchEvent) {
+export async function middleware(req: NextRequest) {
 
 	const token = req.cookies['ReviewGet'];
 
@@ -16,7 +16,7 @@ export async function middleware(req: NextRequest, ev: NextFetchEvent) {
 	const JWT_SECRET = process.env.JWT_SECRET;
 
 	try {
-		const user = await jwtVerify(token, new TextEncoder().encode(JWT_SECRET))
+		await jwtVerify(token, new TextEncoder().encode(JWT_SECRET))
 		return NextResponse.next()
 	}
 	catch (err) {

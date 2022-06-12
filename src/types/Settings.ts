@@ -15,6 +15,7 @@ export type Settings = {
 	account: any
 	billing: any
 	amazon: any
+	[category: string]: any
 }
 
 type Shop = ShopifyShop | ManualShop

@@ -1,9 +1,7 @@
-import jwt from "jsonwebtoken";
 import { NextApiHandler } from "next";
 import dbConnect from '../../../lib/dbConnect';
 import User from "../../../src/models/User";
 import bcrypt from 'bcrypt';
-import { MongooseError } from "mongoose";
 
 const handler: NextApiHandler = async (req, res) => {
 

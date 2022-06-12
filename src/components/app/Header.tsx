@@ -1,6 +1,6 @@
-import { Box, Heading, Tab, TabList, Tabs, useColorModeValue } from "@chakra-ui/react"
+import { Box, Heading, useColorModeValue } from "@chakra-ui/react"
 import { Dispatch, SetStateAction } from "react"
-import { NavChild, NavParent } from "./DashboardPage"
+import { NavParent } from "./DashboardPage"
 
 type HeaderProps = {
 	activePage: NavParent

@@ -50,7 +50,7 @@ const Forgot = () => {
 			}}
 			secondaryAction={{
 				content: 'Back to login',
-				onAction: () => {}
+				onAction: () => {window.open('/auth/login', '_self')}
 			}}
 			values={values}
 			setValues={setValues}
