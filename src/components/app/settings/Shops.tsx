@@ -7,6 +7,7 @@ import axios, { AxiosError } from 'axios'
 const Shops = ({settings, handleChange, saveChanges}: SettingsSectionProps) => {
 
 	const {isOpen, onOpen, onClose} = useDisclosure()
+	
 
 	const [newShop, setNewShop] = useState({
 		type: '',
@@ -33,21 +34,24 @@ const Shops = ({settings, handleChange, saveChanges}: SettingsSectionProps) => {
 			message: ''
 		})
 
-		await axios.post('/api/shopify/connect', {shopName: newShop.shopName})
+		const connectRes = await axios.post('/api/shopify/connect', {shopName: newShop.shopName, name: newShop.name})
 			.then(res => {
 				console.log('Check success', res)
-
-				if (!res.data.success) {
-					return setConnectAlert({
-						status: 'error',
-						message: res.data.message
-					})
-				}
-				return window.open(res.data.redirect)
+				return res.data
 			})
 			.catch((err: AxiosError) => {
 				console.error('Failed to check shop.', err.message)
 			})
+			
+
+		if (!connectRes.success) {
+			return setConnectAlert({
+				status: 'error',
+				message: connectRes.message
+			})
+		}
+
+		window.open(connectRes.redirect, '_blank')
 		
 		let i = 1;
 
@@ -62,6 +66,7 @@ const Shops = ({settings, handleChange, saveChanges}: SettingsSectionProps) => {
 							message: 'Shop connected successfully.'
 						})
 						clearInterval(connectChecker)
+						onClose()
 					}
 				})
 				.catch(err => {
@@ -72,7 +77,7 @@ const Shops = ({settings, handleChange, saveChanges}: SettingsSectionProps) => {
 					clearInterval(connectChecker)
 				})
 
-			if (i == 20) {
+			if (i > 10) {
 				setConnectAlert({
 					status: 'error',
 					message: 'Connection timed out. Please try again.'
@@ -82,9 +87,15 @@ const Shops = ({settings, handleChange, saveChanges}: SettingsSectionProps) => {
 			i++
 		}, 5000)
 
+
 	}
 
-	const [isShopConnected, setIsShopConnected] = useState(false)
+	const validateNewShopForm = () => {
+		if (newShop.name === '' || newShop.name.length < 5) return true
+		if (!`${newShop.shopName}.myshopify.com`.match(/^[a-zA-Z0-9][a-zA-Z0-9-]*.myshopify.com$/)) return true
+		if (connectAlert.status === 'loading') return true
+		return false
+	}
 
 	return (
 		<Box>
@@ -115,7 +126,7 @@ const Shops = ({settings, handleChange, saveChanges}: SettingsSectionProps) => {
 						<ModalHeader>Add a shop</ModalHeader>
 						<ModalCloseButton />
 						<ModalBody>
-							<Stack>
+							<Stack gap={4}>
 								<FormControl>
 									<FormLabel>What type of shop is this?</FormLabel>
 									<Select name='type' onChange={(e) => handleNewChange(e.target.name, e.target.value)} value={newShop.type}>
@@ -125,10 +136,15 @@ const Shops = ({settings, handleChange, saveChanges}: SettingsSectionProps) => {
 									</Select>
 									<FormHelperText>If you have a Shopify shop, orders will be created and set to be fulfilled automatically. If manual, submissions will be logged in your dashboard for you to fulfill manually.</FormHelperText>
 								</FormControl>
+								<FormControl>
+									<FormLabel>Shop Name</FormLabel>
+									<Input name='name' onChange={(e) => handleNewChange(e.target.name, e.target.value)} value={newShop.name} />
+									<FormHelperText>Internal use only.</FormHelperText>
+								</FormControl>
 								{
 									newShop.type && newShop.type == 'shopify' &&
 									<>
-										<FormControl isInvalid={!isShopConnected}>
+										<FormControl>
 											<FormLabel>Shop URL</FormLabel>
 											<InputGroup mb={4}>
 												<Input name='shopName' onChange={(e) => handleNewChange(e.target.name, e.target.value)} value={newShop.shopName} />
@@ -145,20 +161,22 @@ const Shops = ({settings, handleChange, saveChanges}: SettingsSectionProps) => {
 													<AlertTitle>{connectAlert.message}</AlertTitle>
 												</Alert>
 											}
-											{connectAlert.status !== 'success' && <Button 
-												w='100%' 
-												disabled={!`${newShop.shopName}.myshopify.com`.match(/^[a-zA-Z0-9][a-zA-Z0-9-]*.myshopify.com$/) || connectAlert.status === 'loading' ? true : false}
-												onClick={connectShop}
-												isLoading={connectAlert.status === 'loading'}
-											>
-												Connect
-											</Button>}
 									</>
 								}
 							</Stack>
 						</ModalBody>
 						<ModalFooter>
-							<Button colorScheme={'yellow'} disabled={true}>Save shop</Button>
+						{
+							newShop.type && newShop.type == 'shopify' &&
+							<Button 
+								colorScheme={'yellow'}
+								disabled={ validateNewShopForm() }
+								onClick={connectShop}
+								isLoading={connectAlert.status === 'loading'}
+							>
+								Connect
+							</Button>
+						}
 							<Button variant='ghost'>Cancel</Button>
 						</ModalFooter>
 					</ModalContent>

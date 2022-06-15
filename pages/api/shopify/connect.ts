@@ -19,7 +19,7 @@ const handler: NextApiHandler = async (req, res) => {
 
 	const { id } = token.payload as jose.JWTPayload;
 
-	const shopName = req.body.shopName
+	const {shopName, name} = req.body
 
 	const shopUrl = `${shopName}.myshopify.com`
 
@@ -33,6 +33,24 @@ const handler: NextApiHandler = async (req, res) => {
 			}
 		})
 		.lean()
+
+	for (const shop of result[0].settings.shop) {
+		if (shopUrl === shop.shopUrl && shop.type === 'shopify' && shop.status === 'pending' ) {
+			User.updateOne({
+				'settings.shops': {
+					'$elemMatch': {
+						'shopUrl': shopUrl, 
+						'type': 'shopify'
+					}
+				}
+			}, 
+			{ 
+				$pull: {
+					"settings.shops": { shopUrl: shopUrl}
+				}
+			})
+		}
+	}
 
 	if (result.length) {
 		return res.status(200).json({success: false, message: 'Shop is already connected to ReviewGet.'})
@@ -63,7 +81,7 @@ const handler: NextApiHandler = async (req, res) => {
 		path: "/"
 	})
 
-	const updateRes = await User.updateOne({_id: id}, { $push: { "settings.shops": { status: 'pending', type: 'shopify', shopUrl } } }).lean();
+	const updateRes = await User.updateOne({_id: id}, { $push: { "settings.shops": { status: 'pending', type: 'shopify', name, shopUrl } } }).lean();
 
 	res.setHeader('Set-Cookie', serialized)
 

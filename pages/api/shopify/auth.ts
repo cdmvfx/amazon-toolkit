@@ -98,7 +98,17 @@ const handler: NextApiHandler = async (req, res) => {
 	const access_token = shopify_res.payload.access_token;
 
 	// To do: update user document in database.
-	const updateRes = await User.updateOne({_id: id, "settings.shops.shopUrl": shop}, { $set: {"settings.shops.$.accessToken": access_token}})
+	const updateRes = await User.updateOne(
+		{
+			_id: id, "settings.shops.shopUrl": shop
+		}, 
+		{ 
+			$set: {
+				"settings.shops.$.accessToken": access_token, 
+				"settings.shops.$.status": 'connected'
+			}
+		}
+	)
 
 	return res.status(200).send('Installation successful. You may now close this page.');
 	
