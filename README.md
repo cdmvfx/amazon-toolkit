@@ -13,7 +13,3 @@ Clone the repo and set up the following environment variables.
 SHOPIFY_API_CLIENT
 SHOPIFY_API_SECRET
 ```
-
-## Preview
-
-Preview the example live on [StackBlitz](http://stackblitz.com/):
