@@ -18,16 +18,30 @@ export type Settings = {
 	[category: string]: any
 }
 
-type Shop = ShopifyShop | ManualShop
+export type Shop = ShopifyShop | ManualShop
 
 export interface ShopifyShop {
+	status: 'pending' | 'connected' | 'disconnected'
 	type: 'shopify'
 	shopUrl: string
 	accessToken: string
 	name: string
+	products: ShopifyProduct[]
 }
 
 export interface ManualShop {
 	type: 'manual'
 	name: string
+	shopUrl: string
+	products: Product[]
+}
+
+export interface Product {
+	name: string
+	asin: string
+}
+
+export interface ShopifyProduct extends Product {
+	id: string
+	variantId?: string
 }

@@ -57,6 +57,12 @@ const UserSchema = new mongoose.Schema(
 					name: String,
 					shopUrl: String,
 					accessToken: String,
+					datetime: String,
+					products: [{
+						name: String,
+						variantId: String,
+						asin: String
+					}],
 					type: {type: String}
 				}
 			]

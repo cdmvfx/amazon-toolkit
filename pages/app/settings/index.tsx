@@ -3,8 +3,8 @@ import { useRouter } from "next/router"
 import { Dispatch, SetStateAction, useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { AppState } from "src/app/store"
-import SettingsGeneral from "src/components/app/settings/General"
-import Shops from "src/components/app/settings/Shops"
+import SettingsGeneral from "src/components/app/settings/general"
+import Shops from "src/components/app/settings/shops"
 import { editSettings, fetchSettings, selectSettings } from "src/features/settings/settingsSlice"
 import { Settings, SettingsCategory } from "src/types/Settings"
 import DashboardPage, { NavChild, NavParent, navTree } from "../../../src/components/app/DashboardPage"
@@ -41,10 +41,10 @@ const index = () => {
 	const settingsStatus = useSelector((state: AppState) => state.settings.status)
 
 	useEffect(() => {
-    if (settingsStatus === 'idle') {
-      dispatch(fetchSettings())
-    }
-  }, [settingsStatus, dispatch])
+		if (settingsStatus === 'idle') {
+			dispatch(fetchSettings())
+		}
+	}, [settingsStatus, dispatch])
 
 	const [newSettings, setNewSettings] = useState(settings)
 
@@ -59,7 +59,7 @@ const index = () => {
 	// Handle new changes.
 
 	const handleChange = (cat: SettingsCategory, key: string, val: string) => {
-		const changes = {...newSettings};
+		const changes = { ...newSettings };
 		if (!changes[cat]) changes[cat] = {};
 		if (!changes[cat][key]) changes[cat][key] = '';
 		changes[cat][key] = val;
@@ -73,14 +73,14 @@ const index = () => {
 
 	const saveChanges = (category: SettingsCategory) => {
 		const editRequest = {
-			category, 
+			category,
 			edits: newSettings[category]
 		}
 		console.log('Edit request', editRequest)
 		dispatch(editSettings(editRequest))
 	}
 
-	switch((activePage.children as NavChild[])[activeChildIndex].slug) {
+	switch ((activePage.children as NavChild[])[activeChildIndex].slug) {
 		case 'general':
 			return (
 				<DashboardPage activePage={activePage} activeChildIndex={activeChildIndex} setActiveChildIndex={setActiveChildIndex} >
@@ -94,7 +94,11 @@ const index = () => {
 				</DashboardPage>
 			)
 		default:
-			return <Box>No page found.</Box>
+			return (
+				<DashboardPage activePage={activePage} activeChildIndex={activeChildIndex} setActiveChildIndex={setActiveChildIndex} >
+					<Box>No page found.</Box>
+				</DashboardPage>
+			)
 	}
 }
 

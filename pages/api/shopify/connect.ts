@@ -23,6 +23,7 @@ const handler: NextApiHandler = async (req, res) => {
 
 	const shopUrl = `${shopName}.myshopify.com`
 
+	// Check if this shop has already been connected by any RG user.
 	const result = await User
 		.find({
 			'settings.shops': {
@@ -34,25 +35,29 @@ const handler: NextApiHandler = async (req, res) => {
 		})
 		.lean()
 
-	for (const shop of result[0].settings.shop) {
-		if (shopUrl === shop.shopUrl && shop.type === 'shopify' && shop.status === 'pending' ) {
-			User.updateOne({
-				'settings.shops': {
-					'$elemMatch': {
-						'shopUrl': shopUrl, 
-						'type': 'shopify'
-					}
-				}
-			}, 
-			{ 
-				$pull: {
-					"settings.shops": { shopUrl: shopUrl}
-				}
-			})
-		}
-	}
-
 	if (result.length) {
+
+		for (const shop of result[0].settings.shops) {
+
+			// If shop exists and is pending, delete it from the user.
+			if (shopUrl === shop.shopUrl && shop.type === 'shopify' && shop.status === 'pending' ) {
+				User.updateOne({
+					'settings.shops': {
+						'$elemMatch': {
+							'shopUrl': shopUrl, 
+							'type': 'shopify'
+						}
+					}
+				}, 
+				{ 
+					$pull: {
+						"settings.shops": { shopUrl: shopUrl}
+					}
+				})
+			}
+			
+		}
+
 		return res.status(200).json({success: false, message: 'Shop is already connected to ReviewGet.'})
 	}
 
@@ -81,7 +86,14 @@ const handler: NextApiHandler = async (req, res) => {
 		path: "/"
 	})
 
-	const updateRes = await User.updateOne({_id: id}, { $push: { "settings.shops": { status: 'pending', type: 'shopify', name, shopUrl } } }).lean();
+	const updateRes = await User.updateOne({_id: id}, { $push: { "settings.shops": { 
+		status: 'pending', 
+		type: 'shopify', 
+		datetime: new Date().toISOString(),
+		products: [],
+		name, 
+		shopUrl 
+	} } }).lean();
 
 	res.setHeader('Set-Cookie', serialized)
 
